@@ -174,7 +174,10 @@ namespace YoutubeExtractor
         {
             string[] splitByUrls = GetStreamMap(json).Split(',');
             string[] adaptiveFmtSplitByUrls = GetAdaptiveStreamMap(json).Split(',');
-            splitByUrls = splitByUrls.Concat(adaptiveFmtSplitByUrls).ToArray();
+            if (!string.IsNullOrWhiteSpace(adaptiveFmtSplitByUrls[0]))
+            {
+                splitByUrls = splitByUrls.Concat(adaptiveFmtSplitByUrls).Distinct().ToArray();
+            }
 
             foreach (string s in splitByUrls)
             {
@@ -213,17 +216,24 @@ namespace YoutubeExtractor
 
         private static string GetAdaptiveStreamMap(JObject json)
         {
-            JToken streamMap = json["args"]["adaptive_fmts"];
+            try
+            {
+                JToken streamMap = json["args"]["adaptive_fmts"];
 
-            return streamMap.ToString();
+                return streamMap.ToString();
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         private static string GetDecipheredSignature(string htmlPlayerVersion, string signature)
         {
-            if (signature.Length == CorrectSignatureLength)
+            /*if (signature.Length == CorrectSignatureLength)
             {
                 return signature;
-            }
+            }*/
 
             return Decipherer.DecipherWithVersion(signature, htmlPlayerVersion);
         }
