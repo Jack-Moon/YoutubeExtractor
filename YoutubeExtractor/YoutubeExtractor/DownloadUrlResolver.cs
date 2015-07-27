@@ -261,7 +261,7 @@ namespace YoutubeExtractor
             return streamMapString;
         }
 
-        private static IEnumerable<VideoInfo> GetVideoInfos(IEnumerable<ExtractionInfo> extractionInfos, string videoTitle)
+       private static IEnumerable<VideoInfo> GetVideoInfos(IEnumerable<ExtractionInfo> extractionInfos, string videoTitle)
         {
             var downLoadInfos = new List<VideoInfo>();
 
@@ -281,17 +281,9 @@ namespace YoutubeExtractor
                         Title = videoTitle,
                         RequiresDecryption = extractionInfo.RequiresDecryption
                     };
-                }
 
-                else
-                {
-                    info = new VideoInfo(formatCode)
-                    {
-                        DownloadUrl = extractionInfo.Uri.ToString()
-                    };
+                    downLoadInfos.Add(info);
                 }
-
-                downLoadInfos.Add(info);
             }
 
             return downLoadInfos;
